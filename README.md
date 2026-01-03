@@ -16,7 +16,7 @@ Kullanıcıyı karşılayan Hero alanı ve popüler ürünlerin listelendiği an
 
 ### 2. Kategori Vitrini (Showcase Modu)
 Kullanıcı "Tümünü Gör" dediğinde açılan, ürünlerin kategorilerine göre şeritler halinde ayrıldığı (Netflix tarzı) özel vitrin görünümü.
-![Kategori Vitrini](catogoriy_filter.png)
+![Kategori Vitrini](category_filter.png)
 
 ### 3. Ürün Detay ve Sepet İşlemleri
 Ürün açıklamalarının, stok bilgisinin ve fiyat seçeneklerinin yer aldığı detay sayfası.
