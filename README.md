@@ -16,13 +16,9 @@ Kullanıcıyı karşılayan Hero alanı ve popüler ürünlerin listelendiği an
 
 ### 2. Kategori Vitrini (Showcase Modu)
 Kullanıcı "Tümünü Gör" dediğinde açılan, ürünlerin kategorilerine göre şeritler halinde ayrıldığı (Netflix tarzı) özel vitrin görünümü.
-![Kategori Vitrini](image_5689e1.png)
+![Kategori Vitrini](catogoriy_filter.png)
 
-### 3. Detaylı Ürün Listesi
-Belirli bir kategori seçildiğinde veya arama yapıldığında aktif olan grid yapıdaki listeleme sayfası.
-![Ürün Listesi](image_5620fe.png)
-
-### 4. Ürün Detay ve Sepet İşlemleri
+### 3. Ürün Detay ve Sepet İşlemleri
 Ürün açıklamalarının, stok bilgisinin ve fiyat seçeneklerinin yer aldığı detay sayfası.
 ![Ürün Detay](product_detail.png)
 
@@ -36,6 +32,7 @@ Belirli bir kategori seçildiğinde veya arama yapıldığında aktif olan grid 
 * **Sepet Yönetimi:** Session bazlı, dinamik sepet işlemleri (Ekleme/Çıkarma).
 * **Üyelik Sistemi:** ASP.NET Core Identity ile güvenli kayıt ve giriş işlemleri.
 * **Stok Kontrolü:** Stokta olmayan ürünler için "Tükendi" uyarısı ve satın alma engeli.
+* **Favoriler:** Beğenilen ürünleri favori listesine ekleme özelliği.
 
 ### 🛠️ Yönetim Paneli (Admin Dashboard)
 * **Ürün & Kategori Yönetimi:** Veritabanına dinamik ürün ekleme, düzenleme ve silme.
@@ -56,14 +53,14 @@ Proje, sürdürülebilirlik açısından **N-Katmanlı Mimari** üzerine kurulmu
 **Teknoloji Yığını:**
 * **Backend:** C#, ASP.NET Core MVC
 * **Veritabanı:** MSSQL Server, Entity Framework Core (Code First)
-* **Frontend:** HTML5, CSS3, Bootstrap 5
+* **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript (jQuery)
 * **Araçlar:** Visual Studio, Git
 
 ---
 
 ## 🚀 Kurulum ve Çalıştırma
 
-Projeyi yerel makinenizde çalıştırmak için:
+Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
 
 1.  **Projeyi Klonlayın:**
     ```bash
@@ -73,7 +70,7 @@ Projeyi yerel makinenizde çalıştırmak için:
 2.  **Veritabanı Ayarları:**
     `WebUI` katmanındaki `appsettings.json` dosyasını açın ve **ConnectionStrings** alanını kendi SQL Server bilgilerinize göre güncelleyin.
 
-3.  **Migration İşlemi:**
+3.  **Migration İşlemi (Veritabanı Oluşturma):**
     Visual Studio'da **Package Manager Console**'u açın ve aşağıdaki komutu çalıştırın (Default Project: DataAccess seçili olmalıdır):
     ```powershell
     Update-Database
@@ -81,6 +78,18 @@ Projeyi yerel makinenizde çalıştırmak için:
 
 4.  **Başlatma:**
     `WebUI` projesini "Set as Startup Project" yapın ve çalıştırın.
+
+---
+
+## 🔑 Yönetim Paneline Erişim (Admin Girişi)
+
+Veritabanı ilk oluştuğunda sistemde tanımlı bir yönetici (Admin) bulunmayacaktır. Admin paneline erişmek için:
+
+1.  Uygulamayı çalıştırın ve **"Kayıt Ol"** menüsünden normal bir üyelik oluşturun.
+2.  SQL Server Management Studio (SSMS) üzerinden veritabanınızı açın.
+3.  `AspNetUsers` tablosunu bulun ve yeni oluşturduğunuz kullanıcının satırını düzenleyin.
+4.  Kullanıcının rol veya yetki alanını admin yetkisine sahip olacak şekilde güncelleyin.
+5.  Çıkış yapıp tekrar girdiğinizde Admin paneline erişebilirsiniz.
 
 ---
 
