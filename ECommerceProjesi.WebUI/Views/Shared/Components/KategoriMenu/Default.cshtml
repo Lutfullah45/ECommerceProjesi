@@ -1,0 +1,20 @@
+﻿@model List<ECommerceProjesi.Entities.Kategori>
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarKategoriDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-grid"></i> Kategoriler
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarKategoriDropdown">
+        <li><a class="dropdown-item" asp-controller="Urun" asp-action="Index" asp-route-kategoriId="">Tüm Ürünler</a></li>
+        <li><hr class="dropdown-divider"></li>
+
+        @foreach (var kategori in Model)
+        {
+            <li>
+                <a class="dropdown-item" asp-controller="Urun" asp-action="Index" asp-route-kategoriId="@kategori.Id">
+                    @kategori.Ad
+                </a>
+            </li>
+        }
+    </ul>
+</li>

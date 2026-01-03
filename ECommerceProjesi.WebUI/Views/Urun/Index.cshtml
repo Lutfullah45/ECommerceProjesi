@@ -1,0 +1,56 @@
+﻿@using ECommerceProjesi.WebUI.ViewModels
+@model List<KategoriVitrinViewModel>
+
+@{
+    ViewData["Title"] = "Mağaza";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h2 class="display-6 fw-bold">Ürün Koleksiyonları</h2>
+        <p class="text-muted">Kategorilere göz atın</p>
+    </div>
+
+    @* --- KATEGORİ DÖNGÜSÜ --- *@
+    @foreach (var kategori in Model)
+    {
+        @if (kategori.Urunler != null && kategori.Urunler.Any())
+        {
+            <div class="category-section mb-5">
+
+                @* Başlık ve "Tümünü Gör" Linki *@
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h3 class="h4 text-primary border-start border-4 border-primary ps-2">@kategori.KategoriAdi</h3>
+                    <a href="/Urun/Index?kategoriId=@kategori.KategoriUrl" class="btn btn-sm btn-outline-secondary">
+                        @kategori.KategoriAdi Ürünlerini Gör <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                    @foreach (var urun in kategori.Urunler)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm border-0 product-card">
+                                <div style="height: 200px; overflow: hidden;" class="bg-white rounded-top p-3 d-flex align-items-center justify-content-center">
+                                    @{
+                                        var imgPath = urun.Resimler?.FirstOrDefault(r => r.AnaResimMi)?.DosyaAdi ?? "/images/placeholder.png";
+                                    }
+                                    <a asp-controller="Urun" asp-action="Details" asp-route-id="@urun.Id">
+                                        <img src="@imgPath" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="@urun.Ad">
+                                    </a>
+                                </div>
+                                <div class="card-body pt-2">
+                                    <h6 class="card-title text-truncate">
+                                        <a href="/Urun/Details/@urun.Id" class="text-dark text-decoration-none">@urun.Ad</a>
+                                    </h6>
+                                    <span class="text-primary fw-bold">
+                                        @urun.Varyantlar?.OrderBy(v => v.Fiyat).FirstOrDefault()?.Fiyat.ToString("C0")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

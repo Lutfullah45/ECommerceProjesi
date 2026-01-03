@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Yönetim Paneli Ana Sayfa";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<p>Yönetim paneline hoş geldiniz. Buradan site içeriğini yönetebilirsiniz.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ürün Yönetimi</h5>
+                <p class="card-text">Yeni ürün ekleyin, mevcut ürünleri düzenleyin veya silin.</p>
+                <a asp-area="Admin" asp-controller="Urunler" asp-action="Index" class="btn btn-outline-primary">Ürünlere Git</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Kategori Yönetimi</h5>
+                <p class="card-text">Yeni kategori ekleyin, mevcut kategorileri düzenleyin veya silin.</p>
+                <a asp-area="Admin" asp-controller="Kategoriler" asp-action="Index" class="btn btn-outline-primary">Kategorilere Git</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Marka Yönetimi</h5>
+                <p class="card-text">Yeni marka ekleyin, mevcut markaları düzenleyin veya silin.</p>
+                <a asp-area="Admin" asp-controller="Markalar" asp-action="Index" class="btn btn-outline-primary">Markalara Git</a>
+            </div>
+        </div>
+    </div>
+    @* TODO: Siparişler, Müşteriler vb. için kartlar eklenebilir *@
+</div>

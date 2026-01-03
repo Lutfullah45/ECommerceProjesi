@@ -1,0 +1,26 @@
+﻿@model ECommerceProjesi.Entities.Marka
+@{
+    ViewData["Title"] = $"'{Model.Ad}' Markasını Sil";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h3 class="text-danger mt-3">Bu markayı silmek istediğinize emin misiniz?</h3>
+<p class="text-danger">Bu işlem geri alınamaz! Bu markaya bağlı ürünler varsa silme işlemi başarısız olabilir.</p>
+
+<div>
+    <hr />
+    <h4>Marka Bilgileri</h4>
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+        <dt class="col-sm-3">Ad</dt>
+        <dd class="col-sm-9">@Model.Ad</dd>
+    </dl>
+
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Evet, Sil" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-outline-secondary">İptal Et</a>
+    </form>
+</div>

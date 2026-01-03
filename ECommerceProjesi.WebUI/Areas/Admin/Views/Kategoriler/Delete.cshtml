@@ -1,0 +1,30 @@
+﻿@model ECommerceProjesi.Entities.Kategori
+@{
+    ViewData["Title"] = $"'{Model.Ad}' Kategorisini Sil";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h3 class="text-danger mt-3">Bu kategoriyi silmek istediğinize emin misiniz?</h3>
+<p class="text-danger">Bu işlem geri alınamaz! Bu kategoriye bağlı ürünler veya alt kategoriler varsa silme işlemi başarısız olabilir.</p>
+
+<div>
+    <hr />
+    <h4>Kategori Bilgileri</h4>
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+        <dt class="col-sm-3">Ad</dt>
+        <dd class="col-sm-9">@Model.Ad</dd>
+        <dt class="col-sm-3">Açıklama</dt>
+        <dd class="col-sm-9">@Model.Aciklama</dd>
+        <dt class="col-sm-3">Ana Kategori ID</dt>
+        <dd class="col-sm-9">@(Model.ParentKategoriId.HasValue? Model.ParentKategoriId.Value.ToString() : "Yok")</dd>
+    </dl>
+
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Evet, Sil" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-outline-secondary">İptal Et</a>
+    </form>
+</div>

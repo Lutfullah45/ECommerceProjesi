@@ -1,0 +1,48 @@
+﻿@model ECommerceProjesi.Entities.UrunVaryanti
+
+@{
+    ViewData["Title"] = $"Varyant Düzenle: {Model.Ad} (Ürün: {ViewBag.UrunAdi})";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UrunId" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Ad" class="form-label">Varyant Adı (Örn: XL Beden, 256GB Siyah)</label>
+                <input asp-for="Ad" class="form-control" />
+                <span asp-validation-for="Ad" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Fiyat" class="form-label"></label>
+                <input type="number" step="0.01" asp-for="Fiyat" class="form-control" />
+                <span asp-validation-for="Fiyat" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="StokAdedi" class="form-label">Stok Adedi</label>
+                <input type="number" asp-for="StokAdedi" class="form-control" />
+                <span asp-validation-for="StokAdedi" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Değişiklikleri Kaydet" class="btn btn-warning" />
+                <a asp-action="Index" asp-route-urunId="@Model.UrunId" class="btn btn-outline-secondary ms-2">Varyant Listesine Geri Dön</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

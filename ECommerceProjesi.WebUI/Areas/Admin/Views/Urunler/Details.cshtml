@@ -1,0 +1,84 @@
+﻿@model ECommerceProjesi.Entities.Urun
+@{
+    ViewData["Title"] = $"'{Model.Ad}' Ürün Detayı (Admin)";
+    var varyantlar = ViewBag.Varyantlar as List<ECommerceProjesi.Entities.UrunVaryanti> ?? new List<ECommerceProjesi.Entities.UrunVaryanti>();
+    var resimler = ViewBag.Resimler as List<ECommerceProjesi.Entities.UrunResmi> ?? new List<ECommerceProjesi.Entities.UrunResmi>();
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div>
+    <h4>Ana Ürün Bilgileri</h4>
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+        <dt class="col-sm-3">Ürün Adı</dt>
+        <dd class="col-sm-9">@Model.Ad</dd>
+        <dt class="col-sm-3">Açıklama</dt>
+        <dd class="col-sm-9">@Model.Aciklama</dd>
+        <dt class="col-sm-3">Kategori</dt>
+        <dd class="col-sm-9">@(Model.Kategori?.Ad ?? "N/A") (ID: @Model.KategoriId)</dd>
+        <dt class="col-sm-3">Marka</dt>
+        <dd class="col-sm-9">@(Model.Marka?.Ad ?? "N/A") (ID: @Model.MarkaId)</dd>
+    </dl>
+    <hr />
+
+    <h4>Ürün Varyantları</h4>
+    @if (varyantlar.Any())
+    {
+        <table class="table table-sm table-bordered">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Varyant ID</th>
+                    <th>Varyant Adı</th>
+                    <th>Fiyat</th>
+                    <th>Stok Adedi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var varyant in varyantlar)
+                {
+                    <tr>
+                        <td>@varyant.Id</td>
+                        <td>@varyant.Ad</td>
+                        <td>@varyant.Fiyat.ToString("C")</td>
+                        <td>@varyant.StokAdedi</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted">Bu ürün için varyant tanımlanmamış.</p>
+    }
+    <a href="#" class="btn btn-sm btn-outline-success mb-3 disabled">Yeni Varyant Ekle (Yakında)</a>
+    <hr />
+
+    <h4>Ürün Resimleri</h4>
+    @if (resimler.Any())
+    {
+        <div class="d-flex flex-wrap">
+            @foreach (var resim in resimler)
+            {
+                <div class="me-2 mb-2 text-center border p-1">
+                    <img src="@resim.DosyaAdi" alt="Resim ID: @resim.Id" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;" />
+
+                    <div class="small">ID: @resim.Id @(resim.AnaResimMi ? "(Ana Resim)" : "")</div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Bu ürün için resim yüklenmemiş.</p>
+    }
+    <a href="#" class="btn btn-sm btn-outline-success mb-3 disabled">Yeni Resim Ekle (Yakında)</a>
+</div>
+<hr />
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Bu Ürünü Düzenle</a>
+    <a asp-action="Index" class="btn btn-outline-secondary ms-2">Listeye Geri Dön</a>
+</div>

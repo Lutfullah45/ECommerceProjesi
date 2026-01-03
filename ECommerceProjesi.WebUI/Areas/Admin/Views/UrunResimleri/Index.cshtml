@@ -1,0 +1,109 @@
+﻿@model ECommerceProjesi.WebUI.Areas.Admin.Models.UrunResimIndexViewModel
+
+@{
+    ViewData["Title"] = $"'{Model.Urun.Ad}' için Resim Yönetimi";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>Yeni Resim Yükle</h4>
+        <hr />
+        <form asp-action="ResimEkle" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <input type="hidden" name="urunId" value="@Model.Urun.Id" />
+            <div class="form-group mb-3">
+                <label for="dosya" class="form-label">Resim Dosyası</label>
+                <input name="dosya" class="form-control" type="file" required />
+            </div>
+            <div class="form-group mb-3">
+                <label for="sira" class="form-label">Görüntüleme Sırası</label>
+                <input name="sira" value="1" class="form-control" type="number" />
+            </div>
+            <div class="form-check mb-3">
+                <input type="hidden" name="anaResimMi" value="false" />
+                <input class="form-check-input" type="checkbox" name="anaResimMi" value="true" id="anaResimMiCheck" />
+                <label class="form-check-label" for="anaResimMiCheck">
+                    Ana Resim Olarak Ayarla
+                </label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Yükle" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-8">
+        <h4>Mevcut Resimler</h4>
+        <hr />
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+
+
+        @if (Model.Resimler != null && Model.Resimler.Any())
+        {
+            <table class="table table-sm table-bordered mt-3">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Önizleme</th>
+                        <th>Dosya Adı / Yolu</th>
+                        <th>Sıra</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var resim in Model.Resimler)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@resim.DosyaAdi" alt="Resim" style="width: 60px; height: 60px; object-fit: cover;" class="img-thumbnail" />
+                            </td>
+                            <td>@resim.DosyaAdi</td>
+                            <td>@resim.Sira</td>
+                            <td>
+                                @if (resim.AnaResimMi)
+                                {
+                                    <span class="badge bg-success">Ana Resim</span>
+                                }
+                                else
+                                {
+                                    <form asp-action="AnaResimYap" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="resimId" value="@resim.Id" />
+                                        <input type="hidden" name="urunId" value="@Model.Urun.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Ana Resim Yap</button>
+                                    </form>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="ResimSil" method="post" class="d-inline" onsubmit="return confirm('Bu resmi silmek istediğinize emin misiniz?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="resimId" value="@resim.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">Bu ürün için henüz resim yüklenmemiş.</div>
+        }
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Urunler" asp-action="Index" class="btn btn-outline-secondary">Ana Ürün Listesine Geri Dön</a>
+</div>

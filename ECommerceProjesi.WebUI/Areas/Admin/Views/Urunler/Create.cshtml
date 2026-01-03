@@ -1,0 +1,51 @@
+﻿@model ECommerceProjesi.WebUI.Areas.Admin.Models.UrunFormViewModel
+
+@{
+    ViewData["Title"] = "Yeni Ürün Ekle";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-7">
+        <form asp-area="Admin" asp-controller="Urunler" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div> 
+
+            <div class="form-group mb-3">
+                <label asp-for="Urun.Ad" class="form-label"></label>
+                <input asp-for="Urun.Ad" class="form-control" />
+                <span asp-validation-for="Urun.Ad" class="text-danger"></span> 
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Urun.Aciklama" class="form-label"></label>
+                <textarea asp-for="Urun.Aciklama" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Urun.Aciklama" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Urun.KategoriId" class="form-label">Kategori</label>
+                <select asp-for="Urun.KategoriId" class="form-select" asp-items="Model.Kategoriler">
+                    <option value="">-- Kategori Seçiniz --</option>
+                </select>
+                <span asp-validation-for="Urun.KategoriId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Urun.MarkaId" class="form-label">Marka</label>
+                <select asp-for="Urun.MarkaId" class="form-select" asp-items="Model.Markalar">
+                    <option value="">-- Marka Seçiniz --</option>
+                </select>
+                <span asp-validation-for="Urun.MarkaId" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4">
+                <input type="submit" value="Kaydet" class="btn btn-success" />
+                <a asp-action="Index" asp-controller="Urunler" asp-area="Admin" class="btn btn-outline-secondary ms-2">Listeye Geri Dön</a> 
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

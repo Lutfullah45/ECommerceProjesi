@@ -1,0 +1,148 @@
+﻿@model ECommerceProjesi.WebUI.Models.ProfilViewModel
+
+@{
+    ViewData["Title"] = "Profil Ayarları";
+}
+
+<div class="container mt-5 mb-5">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Profil Bilgileri</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProfilGuncelle" asp-controller="Hesabim" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Ad</label>
+                            <input type="text" class="form-control" asp-for="Ad" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Soyad</label>
+                            <input type="text" class="form-control" asp-for="Soyad" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefon</label>
+                            <input type="text" class="form-control" asp-for="Telefon" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email (Sabit)</label>
+                            <input type="text" class="form-control" value="@Model.Email" disabled />
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Bilgileri Güncelle</button>
+                    </form>
+
+                    <hr class="my-3" />
+                    <div class="d-grid">
+                        <a href="/Hesabim/SifreDegistirme" class="btn btn-warning text-dark">
+                            <i class="fa fa-key"></i> Şifremi Değiştir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Adreslerim</h5>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#adresEkleModal">
+                        + Yeni Adres Ekle
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (Model.Adresler != null && Model.Adresler.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Başlık</th>
+                                        <th>Şehir / İlçe</th>
+                                        <th>Açık Adres</th>
+                                        <th>İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Adresler)
+                                    {
+                                        <tr>
+                                            <td><span class="badge bg-secondary">@item.AdresBasligi</span></td>
+                                            <td>@item.Il / @item.Ilce</td>
+                                            <td><small>@item.AcikAdres</small></td>
+                                            <td>
+                                                <a href="/Hesabim/AdresDuzenle/@item.Id" class="btn btn-warning btn-sm text-white">Düzenle</a>
+                                                <a href="/Hesabim/AdresSil/@item.Id" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istiyor musunuz?');">Sil</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center">
+                            Henüz kayıtlı adresiniz yok. Yukarıdaki butona basarak ekleyebilirsiniz.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adresEkleModal" tabindex="-1" aria-labelledby="adresEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="adresEkleModalLabel">Yeni Adres Ekle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <form asp-action="AdresEkle" asp-controller="Hesabim" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Adres Başlığı (Örn: Ev, İş)</label>
+                            <input type="text" class="form-control" asp-for="YeniAdres.AdresBasligi" placeholder="Ev" required />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">İl</label>
+                            <input type="text" class="form-control" asp-for="YeniAdres.Il" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">İlçe</label>
+                            <input type="text" class="form-control" asp-for="YeniAdres.Ilce" required />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teslim Alacak Ad</label>
+                            <input type="text" class="form-control" asp-for="YeniAdres.Ad" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teslim Alacak Soyad</label>
+                            <input type="text" class="form-control" asp-for="YeniAdres.Soyad" required />
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">İletişim Telefonu</label>
+                            <input type="text" class="form-control" asp-for="YeniAdres.Telefon" required />
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Açık Adres</label>
+                            <textarea class="form-control" asp-for="YeniAdres.AcikAdres" rows="3" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Yeni bir hesap oluşturun.</h2>
+            <hr />
+
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+
+            <h4 class="mt-4">Kişisel Bilgiler</h4>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Ad" class="form-control" autocomplete="given-name" placeholder="Adınız" />
+                <label asp-for="Input.Ad">Ad</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Soyad" class="form-control" autocomplete="family-name" placeholder="Soyadınız" />
+                <label asp-for="Input.Soyad">Soyad</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Telefon" class="form-control" autocomplete="tel" placeholder="Telefon" />
+                <label asp-for="Input.Telefon">Telefon</label>
+            </div>
+
+            <h4 class="mt-4">Giriş Bilgileri</h4>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="isim@ornek.com" />
+                <label asp-for="Input.Email">E-posta</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="Şifre" />
+                <label asp-for="Input.Password">Şifre</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Şifre Tekrar" />
+                <label asp-for="Input.ConfirmPassword">Şifre Tekrar</label>
+            </div>
+
+            <h4 class="mt-4">Adres Bilgileri (Siparişleriniz için)</h4>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.AdresBasligi" class="form-control" autocomplete="address-line1" placeholder="Adres Başlığı" />
+                <label asp-for="Input.AdresBasligi"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Il" class="form-control" autocomplete="address-level2" placeholder="İl" />
+                <label asp-for="Input.Il"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Ilce" class="form-control" autocomplete="address-level3" placeholder="İlçe" />
+                <label asp-for="Input.Ilce"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for="Input.AcikAdres" class="form-control" autocomplete="street-address" placeholder="Açık Adres" style="height: 100px"></textarea>
+                <label asp-for="Input.AcikAdres"></label>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary mt-3">Kayıt Ol</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,76 @@
+﻿@model ECommerceProjesi.WebUI.ViewModels.CheckoutViewModel
+@{
+    ViewData["Title"] = "Sipariş Onayı";
+    decimal sepetToplam = Model.Sepet.SepetKalemleri.Sum(k => k.Adet * k.UrunVaryanti.Fiyat);
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Lütfen teslimat ve fatura bilgilerinizi onaylayarak siparişinizi tamamlayın.</p>
+<hr />
+
+<div class="row">
+    <div class="col-md-7">
+        @* --- Adres Seçim Formu --- *@
+        <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <h4><i class="bi bi-truck"></i> 1. Teslimat Adresi</h4>
+            <div class="form-group mb-3">
+                <label for="SecilenTeslimatAdresId" class="form-label fw-bold">Kayıtlı Adreslerimden Seç:</label>
+                <select name="SecilenTeslimatAdresId" class="form-select" asp-items="Model.AdresSelectList">
+                    <option value="0">-- Teslimat Adresi Seçiniz --</option>
+                </select>
+            </div>
+            <h4><i class="bi bi-receipt"></i> 2. Fatura Adresi</h4>
+            <div class="form-group mb-3">
+                <label for="SecilenFaturaAdresId" class="form-label fw-bold">Kayıtlı Adreslerimden Seç:</label>
+                <select name="SecilenFaturaAdresId" class="form-select" asp-items="Model.AdresSelectList">
+                    <option value="0">-- Fatura Adresi Seçiniz --</option>
+                </select>
+            </div>
+            <h4><i class="bi bi-credit-card"></i> 3. Ödeme Yöntemi</h4>
+            <p class="text-muted">
+                Tüm siparişlerde "Kapıda Ödeme" seçeneği kullanılmaktadır.
+            </p>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                    SİPARİŞİ ONAYLA VE TAMAMLA
+                </button>
+            </div>
+        </form>
+    </div>
+
+    @* Sağ Taraf: Sepet Özeti *@
+    <div class="col-md-5">
+        <div class="card shadow-sm" style="position: sticky; top: 100px;">
+            <div class="card-header">
+                <h4 class="my-0 fw-normal">Sipariş Özeti</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach (var kalem in Model.Sepet.SepetKalemleri)
+                    {
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">@kalem.UrunVaryanti.Urun.Ad</h6>
+                                <small class="text-muted">@kalem.UrunVaryanti.Ad (x @kalem.Adet)</small>
+                            </div>
+                            <span class="text-muted">@((kalem.Adet * kalem.UrunVaryanti.Fiyat).ToString("C"))</span>
+                        </li>
+                    }
+
+                    <li class="list-group-item d-flex justify-content-between bg-light fs-5">
+                        <span>Genel Toplam</span>
+                        <strong>@sepetToplam.ToString("C")</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

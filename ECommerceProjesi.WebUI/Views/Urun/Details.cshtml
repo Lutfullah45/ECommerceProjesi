@@ -1,0 +1,212 @@
+﻿@model ECommerceProjesi.WebUI.ViewModels.UrunDetayViewModel
+
+@{
+    ViewData["Title"] = Model.Urun.Ad + " - Ürün Detayı";
+}
+<div class="d-flex justify-content-between align-items-center">
+    <h1>@Model.Urun.Ad</h1>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-controller="Favori" asp-action="EkleCikar" method="post" class="d-inline">
+            <input type="hidden" name="urunId" value="@Model.Urun.Id" />
+            <button type="submit" class="btn btn-outline-danger rounded-circle p-2" title="Favorilere Ekle/Çıkar">
+                <i class="bi bi-heart-fill fs-4"></i>
+            </button>
+        </form>
+    }
+    else
+    {
+        <a href="/Identity/Account/Login" class="btn btn-outline-secondary rounded-circle p-2" title="Favorilere eklemek için giriş yap">
+            <i class="bi bi-heart fs-4"></i>
+        </a>
+    }
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-md-5">
+        @if (Model.Resimler.Any())
+        {
+            var anaResim = Model.Resimler.FirstOrDefault(r => r.AnaResimMi) ?? Model.Resimler.First();
+            <img src="@anaResim.DosyaAdi" alt="@Model.Urun.Ad" class="img-fluid rounded mb-3 shadow-sm" style="max-height: 400px; width: 100%; object-fit: contain;" asp-append-version="true" />
+
+            @if (Model.Resimler.Count > 1)
+            {
+                <div class="d-flex flex-wrap">
+                    @foreach (var resim in Model.Resimler)
+                    {
+                        <img src="@resim.DosyaAdi" asp-append-version="true" alt="Thumbnail" class="img-thumbnail me-2 mb-2 border-primary" style="width: 80px; height: 80px; object-fit: cover; cursor:pointer;" onclick="document.querySelector('.img-fluid').src='@resim.DosyaAdi'" />
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center text-muted border rounded p-5 bg-light">Resim Yok</div>
+        }
+    </div>
+    <div class="col-md-7">
+        <h4 class="mb-3">Ürün Bilgileri</h4>
+        <dl class="row">
+            <dt class="col-sm-3 text-muted">Açıklama</dt>
+            <dd class="col-sm-9">@Model.Urun.Aciklama</dd>
+
+            <dt class="col-sm-3 text-muted">Kategori</dt>
+            <dd class="col-sm-9"><span class="badge bg-secondary">@(Model.Urun.Kategori?.Ad ?? "N/A")</span></dd>
+
+            <dt class="col-sm-3 text-muted">Marka</dt>
+            <dd class="col-sm-9 fw-bold">@(Model.Urun.Marka?.Ad ?? "N/A")</dd>
+
+            <dt class="col-sm-3 text-muted">Ortalama Puan</dt>
+            <dd class="col-sm-9 text-warning">
+                @if (Model.OrtalamaPuan > 0)
+                {
+                    <span class="fw-bold text-dark">@Model.OrtalamaPuan.ToString("0.0")</span>
+                    <i class="bi bi-star-fill"></i>
+                }
+                else
+                {
+                    <span class="text-muted small">(Henüz değerlendirilmedi)</span>
+                }
+            </dd>
+        </dl>
+        <hr />
+
+        @* SEPET FORMU *@
+        <form asp-controller="Sepet" asp-action="Ekle" method="post" class="mb-3">
+            @Html.AntiForgeryToken()
+            <h4 class="mt-4">Seçenekler ve Fiyat</h4>
+            @if (Model.Varyantlar.Any())
+            {
+                <div class="card p-3 bg-light border-0">
+                    <div class="form-group mb-3">
+                        <label for="urunVaryantiId" class="form-label fw-bold">Seçenek:</label>
+                        <select name="urunVaryantiId" class="form-select">
+                            @foreach (var varyant in Model.Varyantlar)
+                            {
+                                <option value="@varyant.Id" disabled="@(varyant.StokAdedi <= 0)">
+                                    @varyant.Ad (@varyant.Fiyat.ToString("C")) @(varyant.StokAdedi <= 0 ? "[Stok Tükendi]" : "")
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="adet" class="form-label fw-bold">Adet:</label>
+                        <input type="number" name="adet" value="1" class="form-control" style="width: 100px;" min="1" max="10" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100 shadow">
+                        <i class="bi bi-cart-plus"></i> Sepete Ekle
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <p class="mb-0">Bu ürün için henüz seçenek eklenmemiştir.</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-lg w-100" disabled>Stokta Yok</button>
+            }
+        </form>
+    </div>
+</div>
+
+@* --- 4. KISIM: YORUMLAR VE DEĞERLENDİRME --- *@
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="mb-4 border-bottom pb-2">Değerlendirmeler ve Yorumlar</h3>
+
+        @* Yorum Yapma Formu *@
+        <div class="card bg-light mb-4 border-0 shadow-sm">
+            <div class="card-body">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <h5 class="card-title"><i class="bi bi-chat-quote"></i> Yorum Yap</h5>
+                    <form asp-controller="Yorum" asp-action="Ekle" method="post">
+                        <input type="hidden" name="urunId" value="@Model.Urun.Id" />
+
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Puanınız:</label>
+                                <select name="puan" class="form-select">
+                                    <option value="5">⭐⭐⭐⭐⭐ (5 - Çok İyi)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4 - İyi)</option>
+                                    <option value="3">⭐⭐⭐ (3 - Orta)</option>
+                                    <option value="2">⭐⭐ (2 - Kötü)</option>
+                                    <option value="1">⭐ (1 - Çok Kötü)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-9 mb-3">
+                                <label class="form-label fw-bold">Yorumunuz:</label>
+                                <textarea name="icerik" class="form-control" rows="2" placeholder="Ürün hakkındaki düşüncelerinizi yazın..." required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i> Gönder
+                            </button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <p class="mb-2 text-muted">Yorum yapmak ve puan vermek için giriş yapmalısınız.</p>
+                        <a href="/Identity/Account/Login" class="btn btn-outline-primary btn-sm">Giriş Yap</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* Yapılmış Yorumların Listesi *@
+        @if (Model.Yorumlar != null && Model.Yorumlar.Any())
+        {
+            <div class="list-group list-group-flush">
+                @foreach (var yorum in Model.Yorumlar)
+                {
+                    <div class="list-group-item px-0 py-3">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <h6 class="mb-1 fw-bold text-primary">
+                                <i class="bi bi-person-circle"></i>
+                                @(yorum.User?.UserName ?? "Misafir Kullanıcı")
+                            </h6>
+                            <small class="text-muted">@yorum.Tarih.ToShortDateString()</small>
+                        </div>
+
+                        <div class="mb-2 text-warning" style="font-size: 0.9rem;">
+                            @for (int i = 0; i < yorum.Puan; i++)
+                            {
+                                <i class="bi bi-star-fill"></i>
+                            }
+                            @for (int i = 0; i < (5 - yorum.Puan); i++)
+                            {
+                                <i class="bi bi-star"></i>
+                            }
+                        </div>
+
+                        <p class="mb-1 text-dark">@yorum.Icerik</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info d-flex align-items-center">
+                <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                <div>
+                    Henüz bu ürüne yorum yapılmamış. İlk yorumu siz yapın!
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@* --- 5. KISIM: GERİ DÖN BUTONU --- *@
+<div class="mt-5 border-top pt-3 mb-5">
+    <a asp-action="Index" class="btn btn-link text-decoration-none ps-0">
+        <i class="bi bi-arrow-left"></i> Listeye Geri Dön
+    </a>
+</div>

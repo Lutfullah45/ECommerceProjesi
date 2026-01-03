@@ -1,0 +1,97 @@
+﻿@model ECommerceProjesi.Entities.Sepet
+@{
+    ViewData["Title"] = "Alışveriş Sepetim";
+    decimal sepetToplam = 0; 
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+@if (Model != null && Model.SepetKalemleri.Any())
+{
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Sepetteki Ürünler</h4>
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 100px;">Ürün</th>
+                        <th>Ürün Adı / Varyant</th>
+                        <th style="width: 100px;">Fiyat</th>
+                        <th style="width: 150px;">Adet</th>
+                        <th style="width: 100px;">Toplam</th>
+                        <th style="width: 80px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var kalem in Model.SepetKalemleri)
+                    {
+                        var kalemToplam = kalem.UrunVaryanti.Fiyat * kalem.Adet;
+                        sepetToplam += kalemToplam;
+                        var anaResim = kalem.UrunVaryanti.Urun.Resimler?.FirstOrDefault(r => r.AnaResimMi) ?? kalem.UrunVaryanti.Urun.Resimler?.FirstOrDefault();
+                        var resimYolu = anaResim?.DosyaAdi ?? "/images/placeholder.png";
+
+                        <tr>
+                            <td>
+                                <img src="@resimYolu" asp-append-version="true" class="img-fluid rounded" style="width: 80px; height: 80px; object-fit: cover;" alt="@kalem.UrunVaryanti.Urun.Ad" />
+                            </td>
+                            <td>
+                                <strong>@kalem.UrunVaryanti.Urun.Ad</strong>
+                                <br />
+                                <small class="text-muted">@kalem.UrunVaryanti.Ad</small>
+                            </td>
+                            <td>@kalem.UrunVaryanti.Fiyat.ToString("C")</td>
+                            <td>
+                                <form asp-action="Guncelle" method="post" class="d-flex">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="sepetKalemiId" value="@kalem.Id" />
+                                    <input type="number" name="adet" value="@kalem.Adet" class="form-control form-control-sm" style="width: 70px;" min="1" />
+                                    <button type="submit" class="btn btn-sm btn-outline-primary ms-1">Güncelle</button>
+                                </form>
+                            </td>
+                            <td>@kalemToplam.ToString("C")</td>
+                            <td>
+                                <form asp-action="Sil" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="sepetKalemiId" value="@kalem.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Sepetten Kaldır">X</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 fw-normal">Sepet Özeti</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Ara Toplam
+                            <span>@sepetToplam.ToString("C")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Kargo
+                            <span>Ücretsiz</span> 
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                            <h5>Genel Toplam</h5>
+                            <h5>@sepetToplam.ToString("C")</h5>
+                        </li>
+                    </ul>
+                    <a asp-controller="Checkout" asp-action="Index" class="w-100 btn btn-lg btn-success mt-3">Siparişi Tamamla</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center" role="alert">
+        <h4>Alışveriş sepetiniz boş.</h4>
+        <a asp-controller="Urun" asp-action="Index" class="btn btn-primary mt-2">Alışverişe Başla</a>
+    </div>
+}

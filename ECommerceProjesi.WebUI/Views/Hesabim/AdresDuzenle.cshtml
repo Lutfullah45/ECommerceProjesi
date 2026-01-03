@@ -1,0 +1,48 @@
+﻿@model ECommerceProjesi.Entities.Adres
+
+<div class="container mt-5">
+    <div class="card col-md-6 mx-auto shadow">
+        <div class="card-header bg-warning text-white">
+            <h5>Adresi Düzenle</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="AdresDuzenle" asp-controller="Hesabim" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label>Adres Başlığı</label>
+                    <input type="text" asp-for="AdresBasligi" class="form-control" required />
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label>İl</label>
+                        <input type="text" asp-for="Il" class="form-control" required />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label>İlçe</label>
+                        <input type="text" asp-for="Ilce" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Açık Adres</label>
+                    <textarea asp-for="AcikAdres" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label>Teslim Alacak Kişi (Ad)</label>
+                    <input type="text" asp-for="Ad" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label>Teslim Alacak Kişi (Soyad)</label>
+                    <input type="text" asp-for="Soyad" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label>Telefon</label>
+                    <input type="text" asp-for="Telefon" class="form-control" required />
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Değişiklikleri Kaydet</button>
+                <a href="/Hesabim/Profil" class="btn btn-secondary w-100 mt-2">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>
