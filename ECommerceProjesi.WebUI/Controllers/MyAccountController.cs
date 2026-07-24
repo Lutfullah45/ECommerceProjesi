@@ -44,7 +44,7 @@ namespace ECommerceProjesi.WebUI.Controllers
             var musteri = GetMevcutMusteri();
             if (musteri == null) return RedirectToAction("Index", "Home");
             var siparisler = _siparisService.GetirSiparislerByMusteriId(musteri.Id);
-            return View(siparisler);
+            return View("MyOrders", siparisler);
         }
 
         // --- SİPARİŞ DETAY ---
@@ -53,7 +53,7 @@ namespace ECommerceProjesi.WebUI.Controllers
             var musteri = GetMevcutMusteri();
             var siparisDetay = _siparisService.GetirSiparisDetay(id);
             if (siparisDetay == null || musteri == null || siparisDetay.MusteriId != musteri.Id) return Forbid();
-            return View("~/Views/Checkout/Basarili.cshtml", siparisDetay);
+            return View("~/Views/Checkout/Success.cshtml", siparisDetay);
         }
 
         // --- PROFİL SAYFASI (GET) ---
@@ -75,7 +75,7 @@ namespace ECommerceProjesi.WebUI.Controllers
                 YeniAdres = new Adres()
             };
 
-            return View(model);
+            return View("Profile", model);
         }
 
         // --- PROFİL GÜNCELLEME ---
@@ -133,7 +133,7 @@ namespace ECommerceProjesi.WebUI.Controllers
                 return RedirectToAction("Profil");
             }
 
-            return View(adres); 
+            return View("EditAddress", adres);
         }
 
         [HttpPost]
@@ -160,7 +160,7 @@ namespace ECommerceProjesi.WebUI.Controllers
         [HttpGet]
         public IActionResult SifreDegistirme()
         {
-            return View();
+            return View("ChangePassword");
         }
 
         // --- ŞİFRE DEĞİŞTİRME İŞLEMİ (POST) ---
@@ -169,7 +169,7 @@ namespace ECommerceProjesi.WebUI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("ChangePassword", model);
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -188,7 +188,7 @@ namespace ECommerceProjesi.WebUI.Controllers
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-                return View(model);
+                return View("ChangePassword", model);
             }
         }
     }

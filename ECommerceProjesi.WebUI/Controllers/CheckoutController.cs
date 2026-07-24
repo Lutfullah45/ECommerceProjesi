@@ -127,7 +127,7 @@ namespace ECommerceProjesi.WebUI.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View(siparisDetay);
+            return View("Success", siparisDetay);
         }
     }
 }
