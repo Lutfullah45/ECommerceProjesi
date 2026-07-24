@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ECommerceProjesi.DataAccess\ECommerceProjesi.DataAccess.csproj" />
-    <ProjectReference Include="..\ECommerceProjesi.Entities\ECommerceProjesi.Entities.csproj" />
+    <ProjectReference Include="..\ECommerceProject.DataAccess\ECommerceProject.DataAccess.csproj" />
+    <ProjectReference Include="..\ECommerceProject.Entities\ECommerceProject.Entities.csproj" />
   </ItemGroup>
 
 </Project>
